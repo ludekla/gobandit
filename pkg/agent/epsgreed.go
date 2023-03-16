@@ -4,25 +4,25 @@ import (
 	"bandit/pkg/arm"
 )
 
-// EpsilonGreedy is an agent that chooses arms following the epsilon-greedy policy: 
+// EpsilonGreedy is an agent that chooses arms following the epsilon-greedy policy:
 // - explore: try all arms with probability epsilon
-// - exploit: take the so far best arm 
+// - exploit: take the so far best arm
 type EpsilonGreedy struct {
 	epsilon float64
-	nArms int
-	Values []float64
-	Counts []float64
+	nArms   int
+	Values  []float64
+	Counts  []float64
 }
 
-// Constructor function. Initially the agent has no info about the 
+// Constructor function. Initially the agent has no info about the
 // number of arms to work on.
 func NewEpsilonGreedy(eps float64) EpsilonGreedy {
 	return EpsilonGreedy{epsilon: eps}
 }
 
 // Performs bandit experiment and returns a slice of relative frequencies
-// for the arms to be chosen as best after each trial of rounds. Every 
-// episode is given by a trial of n rounds, where n is the horizon.   
+// for the arms to be chosen as best after each trial of rounds. Every
+// episode is given by a trial of n rounds, where n is the horizon.
 func (eg *EpsilonGreedy) Run(arms []arm.BanditArm, nEpisodes, horizon int) []float64 {
 	// set the number of arms and prepare the value functions
 	eg.nArms = len(arms)
@@ -61,7 +61,7 @@ func (eg EpsilonGreedy) SelectArm() int {
 func (eg *EpsilonGreedy) Update(arm int, reward float64) {
 	eg.Counts[arm] += 1.0
 	eg.Values[arm] += (reward - eg.Values[arm]) / eg.Counts[arm]
-} 
+}
 
 // Restores the initial situation.
 func (eg *EpsilonGreedy) Reset() {

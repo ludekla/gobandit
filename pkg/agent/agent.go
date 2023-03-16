@@ -2,14 +2,14 @@
 package agent
 
 import (
-	"math"
 	"bandit/pkg/arm"
+	"math"
 )
 
 // Finds the maximum value of the slice and returns its slice index
 func argmax(vals []float64) int {
-	var max = -math.MaxFloat64  // smallest possible float64
-	var idx int                 // index to be returned
+	var max = -math.MaxFloat64 // smallest possible float64
+	var idx int                // index to be returned
 	// iterates through slice to find maximum value
 	for i, val := range vals {
 		if val > max {
@@ -20,7 +20,7 @@ func argmax(vals []float64) int {
 	return idx
 }
 
-// Agent interface represents an agent in charge conducting bandit experiments. 
+// Agent interface represents an agent in charge conducting bandit experiments.
 type Agent interface {
 	Run(arms []arm.BanditArm, nEpisodes, horizon int)
 	SelectArm() int
