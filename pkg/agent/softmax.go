@@ -115,7 +115,7 @@ func (sm AnnealingSoftmax) SelectArm() int {
 	temp := sm.temperature / math.Log(sumSlice(sm.Counts)+1.000001)
 	distro := make([]float64, sm.nArms)
 	for i, val := range sm.Values {
-		distro[i] = math.Exp(val/temp)
+		distro[i] = math.Exp(val / temp)
 	}
 	norm := sumSlice(distro)
 	for i, val := range distro {
