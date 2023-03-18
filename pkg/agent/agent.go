@@ -2,24 +2,11 @@
 package agent
 
 import (
-	"bandit/pkg/arm"
 	"math"
-)
 
-// Helper functions
-// Finds the maximum value of the slice and returns its slice index
-func argmax(vals []float64) int {
-	var max = -math.MaxFloat64 // smallest possible float64
-	var idx int                // index to be returned
-	// iterates through slice to find maximum value
-	for i, val := range vals {
-		if val > max {
-			idx = i
-			max = val
-		}
-	}
-	return idx
-}
+	"bandit/pkg/arm"
+	plc "bandit/pkg/policy"
+)
 
 // Computes mean-squared error of a distro to the delta-distro
 // characterised by die index that carries the weight
@@ -35,7 +22,7 @@ func MSE(distro []float64, idx int) float64 {
 	return math.Sqrt(sum / float64(len(distro)))
 }
 
-// Agent interface represents an agent in charge conducting bandit experiments.
+// Agent interface represents an agent conducting bandit experiments.
 type Agent interface {
 	Run(arms []arm.BanditArm, nEpisodes, horizon int)
 	SelectArm() int
@@ -43,15 +30,20 @@ type Agent interface {
 	Reset()
 }
 
-// Implementation of Agen Interface
+// Implementation of Agent Interface
 type Player struct {
+	policy plc.Policy
 	nArms  int
 	Values []float64
 	Counts []float64
 }
+// Constructor. Player needs a policy to select the bandit's arms.
+func NewPlayer(pol plc.Policy) Player {
+	return Player{policy: pol}
+}
 
 // Performs bandit experiment and returns a slice of relative frequencies
-// for the arms to be chosen as best after each trial of rounds. Every
+// for the arms that have been chosen as best after each trial of rounds. Every
 // episode is given by a trial of n rounds, where n is the horizon.
 func (pl *Player) Run(arms []arm.BanditArm, nEpisodes, horizon int) []float64 {
 	// set the number of arms and prepare the value functions
@@ -67,7 +59,7 @@ func (pl *Player) Run(arms []arm.BanditArm, nEpisodes, horizon int) []float64 {
 			reward := arms[idx].Draw()
 			pl.Update(idx, reward)
 		}
-		best := argmax(pl.Values)
+		best := plc.Argmax(pl.Values)
 		// count the number of times this action comes out best in the episode
 		freqs[best] += 1.0
 	}
@@ -81,7 +73,7 @@ func (pl *Player) Run(arms []arm.BanditArm, nEpisodes, horizon int) []float64 {
 // Implementation of the temperature-greedy policy.
 // Chooses an arm randomly (explores) or the so far most rewarding one (exploit).
 func (pl Player) SelectArm() int {
-	return 0
+	return pl.policy.SelectArm(pl.Values)
 }
 
 // Updates the action values.

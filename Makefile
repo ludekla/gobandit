@@ -1,6 +1,6 @@
 AGT := pkg/agent/*
 ARM := pkg/arm/*
-TRG := soma
+TRG := main
 
 bin/$(TRG): cmd/$(TRG).go
 	go build -o bin/$(TRG) cmd/$(TRG).go
