@@ -60,4 +60,8 @@ func main() {
     am := agent.NewAnnealingSoftmax(1.0)
 	fq = Run(am, bandit, 10000, 5)
 	Report("Annealing Softmax", bandit, fq, 2)
+
+	uc := agent.NewUCB()
+	fq = Run(uc, bandit, 10000, 5)
+	Report("UCB", bandit, fq, 2)
 }
