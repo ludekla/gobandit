@@ -24,9 +24,9 @@ func (u UCB) SelectArm() int {
 	}
 	values := make([]float64, len(u.Values))
 	copy(values, u.Values)
-	norm := math.Log(sumSlice(u.Counts))
+	norm := math.Log(SumVals(u.Counts))
 	for i, val := range values {
-		values[i] = val + math.Sqrt(norm / u.Counts[i])
+		values[i] = val + math.Sqrt(norm/u.Counts[i])
 	}
 	return argmax(values)
 }

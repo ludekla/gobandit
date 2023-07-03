@@ -1,8 +1,8 @@
 package agent
 
-import "bandit/pkg/arm"
+import "math/rand"
 
-// EpsilonGreedy implements the poicy interface.
+// EpsilonGreedy implements the Agent interface.
 // It chooses arms following the epsilon-greedy policy:
 // - explore: try all arms with probability epsilon
 // - exploit: take the so far best arm
@@ -14,16 +14,17 @@ type EpsilonGreedy struct {
 	epsilon float64
 }
 
-// Constructor function.
+// Constructor function for the EpsilonGreedy agent.
 func NewEpsilonGreedy(eps float64) EpsilonGreedy {
 	return EpsilonGreedy{&ProtoAgent{}, eps}
 }
 
 // Implementation of the epsilon-greedy policy.
-// Chooses an arm randomly (explores) or the so far most rewarding one (exploit).
+// SelectArm chooses an arm randomly (explores) or the so far most
+// rewarding one (exploit - greedy choice).
 func (eg EpsilonGreedy) SelectArm() int {
-	if arm.Rng.Float64() < eg.epsilon {
-		return arm.Rng.Intn(eg.nArms)
+	if rand.Float64() < eg.epsilon {
+		return rand.Intn(eg.nArms)
 	}
 	return argmax(eg.Values)
 }

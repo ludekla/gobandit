@@ -2,11 +2,11 @@ package main
 
 import (
     "fmt"
-    "bandit/pkg/arm"
-    "bandit/pkg/agent"
+    "gobandit/pkg/arm"
+    "gobandit/pkg/agent"
 )
 
-// Performs bandit experiment and returns a slice of relative frequencies
+// Performs the bandit experiment and returns a slice of relative frequencies
 // for the arms that have been chosen as best after each trial of rounds. Every
 // episode is given by a trial of n rounds, where n is the horizon.
 func Run(ag agent.Agent, arms []arm.BanditArm, nEpisodes, horizon int) []float64 {
@@ -41,7 +41,9 @@ func Report(name string, bandit []arm.BanditArm, fq []float64, idx int) {
 }
 
 func main() {
-	
+
+	fmt.Println("Dev")
+
     bandit := []arm.BanditArm{
 		arm.NewBernoulliArm(0.1),
 		arm.NewBernoulliArm(0.1),

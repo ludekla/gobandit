@@ -1,4 +1,4 @@
-// Package agent implements the agent part of multi-armed bandit algorithms.
+// Implements the agent part of multi-armed bandit algorithms.
 package agent
 
 import (
@@ -7,7 +7,7 @@ import (
 )
 
 // Helper functions
-// Finds the maximum value of the slice and returns its slice index
+// argmax finds the maximum value of the slice and returns its slice index.
 func argmax(vals []float64) int {
 	var max = -math.MaxFloat64 // smallest possible float64
 	var idx int                // index to be returned
@@ -20,17 +20,21 @@ func argmax(vals []float64) int {
 	}
 	return idx
 }
-// Computes the sum of the values of a slice
-func sumSlice(vals []float64) float64 {
+
+// SumVals computes the sum of the values of a slice.
+func SumVals(vals []float64) float64 {
 	var sum float64
 	for _, val := range vals {
 		sum += val
 	}
 	return sum
 }
-// Returns a random int by probing the given distribution
+
+// randIndex returns a random index (int) by probing the given distribution.
+// The values of distro must sum up to unity. The returned index represents the
+// the arm the arm that has been chosen.
 func randIndex(distro []float64) int {
-	var cumsum float64
+	var cumsum float64 // cumulative sum
 	val := rand.Float64()
 	for i, prob := range distro {
 		cumsum += prob
@@ -41,8 +45,8 @@ func randIndex(distro []float64) int {
 	return len(distro) - 1
 }
 
-// Computes mean-squared error of a distro to the delta-distro
-// characterised by die index that carries the weight
+// MSE computes the mean-squared error between the given distribution distro
+// and the 'correct' distribution with its weight sitting on one index (idx).
 func MSE(distro []float64, idx int) float64 {
 	var sum float64
 	for i, val := range distro {
@@ -63,30 +67,28 @@ type Agent interface {
 	BestAction() int
 }
 
-// ProtoAgent is implements part of the Agent interface with the purpose of being 
-// embedded into fully-fledged agents that implement the selectArm method.
+// ProtoAgent implements part of the Agent interface with the purpose of being
+// embedded into fully-fledged agents that implement the SelectArm method.
 type ProtoAgent struct {
 	nArms  int
 	Values []float64
 	Counts []float64
 }
 
-// Initialises the agent.
+// Init initialises the agent by setting up all-zero slices.
 func (pa *ProtoAgent) Init(nArms int) {
 	pa.nArms = nArms
 	pa.Values = make([]float64, nArms)
 	pa.Counts = make([]float64, nArms)
 }
 
-// Updates the action values.
+// Update updates the action values.
 func (pa *ProtoAgent) Update(arm int, reward float64) {
 	pa.Counts[arm] += 1.0
 	pa.Values[arm] += (reward - pa.Values[arm]) / pa.Counts[arm]
 }
 
-// Returns the action with best value.
+// BestAction returns the action with the so far best value (greedy choice).
 func (pa ProtoAgent) BestAction() int {
 	return argmax(pa.Values)
 }
-
-

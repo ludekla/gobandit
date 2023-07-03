@@ -2,12 +2,16 @@ AGT := pkg/agent/*
 ARM := pkg/arm/*
 TRG := main
 
-bin/$(TRG): cmd/$(TRG).go
-	go build -o bin/$(TRG) cmd/$(TRG).go
+fmt:
+	go fmt $(ARM)
+	go fmt $(AGT)
 
-tests:
+test:
 	go test -v $(AGT)
 	go test -v $(ARM)
+
+build:
+	go build -o bin/$(TRG) cmd/$(TRG).go
 
 clean:
 	rm bin/*

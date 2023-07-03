@@ -2,11 +2,15 @@ package main
 
 import (
     "fmt"
-    "bandit/pkg/arm"
-    "bandit/pkg/agent"
+    "flag"
+    "os"
+    "strconv"
+
+    "gobandit/pkg/arm"
+    "gobandit/pkg/agent"
 )
 
-// Performs bandit experiment and returns a slice of relative frequencies
+// Performs the bandit experiment and returns a slice of relative frequencies
 // for the arms that have been chosen as best after each trial of rounds. Every
 // episode is given by a trial of n rounds, where n is the horizon.
 func Run(ag agent.Agent, arms []arm.BanditArm, nEpisodes, horizon int) []float64 {
@@ -42,13 +46,32 @@ func Report(name string, bandit []arm.BanditArm, fq []float64, idx int) {
 
 func main() {
 
-	fmt.Println("Dev")
+    flag.Parse()
+    args := flag.Args()
+    app := "app"
 
-    bandit := []arm.BanditArm{
-		arm.NewBernoulliArm(0.1),
-		arm.NewBernoulliArm(0.1),
-		arm.NewBernoulliArm(0.15),
-		arm.NewBernoulliArm(0.1),
+    if len(args) < 2 {
+        fmt.Println("Please provide at least 2 numbers between 0 and 1 as bandit-arm parameters.")
+        fmt.Printf("Usage bin/%s [...numbers]\n", app)
+        os.Exit(0)
+    }
+
+    parms := make([]float64, len(args))
+    for i, strval := range args {
+        val, err := strconv.ParseFloat(strval, 64)
+        if err != nil {
+            fmt.Printf("Cannot interpret %q as float. Try again.\n", strval)
+            os.Exit(0)
+        } else if val < 0.0 || val > 1.0 {
+            fmt.Printf("Cannot interpret %q as float in [0, 1]. Try again.\n", strval)
+            os.Exit(0)
+        }
+        parms[i] = val
+    }
+
+    bandit := make([]arm.BanditArm, len(args))
+    for i, parm := range parms {
+		bandit[i] = arm.NewBernoulliArm(parm)
 	}
 
 	eg := agent.NewEpsilonGreedy(0.1)
