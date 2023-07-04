@@ -1,9 +1,10 @@
-package main
+package trial
 
 import (
-    "fmt"
-    "gobandit/pkg/arm"
-    "gobandit/pkg/agent"
+	"fmt"
+
+	"gobandit/pkg/agent"
+	"gobandit/pkg/arm"
 )
 
 // Performs the bandit experiment and returns a slice of relative frequencies
@@ -38,32 +39,4 @@ func Report(name string, bandit []arm.BanditArm, fq []float64, idx int) {
 	fmt.Printf("Bandit: %v\n", bandit)
 	fmt.Printf("Freqs:  %v\n", fq)
 	fmt.Printf("Error:  %v\n", agent.MSE(fq, idx))
-}
-
-func main() {
-
-	fmt.Println("Dev")
-
-    bandit := []arm.BanditArm{
-		arm.NewBernoulliArm(0.1),
-		arm.NewBernoulliArm(0.1),
-		arm.NewBernoulliArm(0.15),
-		arm.NewBernoulliArm(0.1),
-	}
-
-	eg := agent.NewEpsilonGreedy(0.1)
-	fq := Run(eg, bandit, 10000, 5)
-	Report("Epsilon-Greedy", bandit, fq, 2)
-
-	sm := agent.NewSoftmax(1.0)
-	fq = Run(sm, bandit, 10000, 5)
-	Report("Softmax", bandit, fq, 2)
-
-    am := agent.NewAnnealingSoftmax(1.0)
-	fq = Run(am, bandit, 10000, 5)
-	Report("Annealing Softmax", bandit, fq, 2)
-
-	uc := agent.NewUCB()
-	fq = Run(uc, bandit, 10000, 5)
-	Report("UCB", bandit, fq, 2)
 }
