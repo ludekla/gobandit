@@ -19,6 +19,9 @@ test:
 	go test -v $(ARM)
 	go test -v $(TRL)
 
+bench:
+	go test --bench=. --benchmem $(TRL)
+
 build:
 	go build -o bin/$(TRG) $(TRG).go
 

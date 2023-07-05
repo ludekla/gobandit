@@ -28,5 +28,5 @@ func (u UCB) SelectArm() int {
 	for i, val := range values {
 		values[i] = val + math.Sqrt(norm/u.Counts[i])
 	}
-	return argmax(values)
+	return Argmax(values)
 }

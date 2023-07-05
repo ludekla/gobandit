@@ -7,8 +7,8 @@ import (
 )
 
 // Helper functions
-// argmax finds the maximum value of the slice and returns its slice index.
-func argmax(vals []float64) int {
+// Argmax finds the maximum value of the slice and returns its slice index.
+func Argmax(vals []float64) int {
 	var max = -math.MaxFloat64 // smallest possible float64
 	var idx int                // index to be returned
 	// iterates through slice to find maximum value
@@ -90,5 +90,5 @@ func (pa *ProtoAgent) Update(arm int, reward float64) {
 
 // BestAction returns the action with the so far best value (greedy choice).
 func (pa ProtoAgent) BestAction() int {
-	return argmax(pa.Values)
+	return Argmax(pa.Values)
 }

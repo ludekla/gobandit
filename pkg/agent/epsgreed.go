@@ -26,5 +26,5 @@ func (eg EpsilonGreedy) SelectArm() int {
 	if rand.Float64() < eg.epsilon {
 		return rand.Intn(eg.nArms)
 	}
-	return argmax(eg.Values)
+	return Argmax(eg.Values)
 }
