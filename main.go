@@ -11,7 +11,6 @@ import (
 )
 
 func main() {
-
 	flag.Parse()
 	args := flag.Args()
 
@@ -29,5 +28,4 @@ func main() {
 	eg := agent.NewEpsilonGreedy(0.1)
 	fq := trial.Run(eg, bandit, 10000, 5)
 	trial.Report("Epsilon-Greedy", bandit, fq, 2)
-
 }
