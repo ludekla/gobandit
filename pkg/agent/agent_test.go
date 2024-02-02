@@ -1,8 +1,8 @@
 package agent
 
 import (
-	"testing"
 	"math"
+	"testing"
 )
 
 func TestArgmax(t *testing.T) {
@@ -27,7 +27,7 @@ func TestMSE(t *testing.T) {
 	s := []float64{0.1, 0.3, 0.2, 0.8}
 	exp := 0.21213203435596428
 	got := MSE(s, 3)
-	if math.Abs(exp - got) > 1e-10 {
+	if math.Abs(exp-got) > 1e-10 {
 		t.Errorf("Expected index %v, got %v", exp, got)
 	}
 }

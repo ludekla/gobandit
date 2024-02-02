@@ -13,7 +13,7 @@ import (
 func main() {
 	flag.Parse()
 	args := flag.Args()
-
+	
 	parms, err := trial.GetParms("app", args)
 	if err != nil {
 		fmt.Printf("ERROR: %v", err)
